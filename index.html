@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Strategy Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1B7B7E;
+            background: linear-gradient(135deg, #0D5F62 0%, #1B9B9E 50%, #0D5F62 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #F5F1E8;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #F5F1E8;
+            color: #1B7B7E;
+            padding: 40px;
+            text-align: center;
+            border-bottom: none;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #1B7B7E;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            line-height: 1.5;
+            color: #1B7B7E;
+        }
+
+        .form-content {
+            padding: 40px;
+            background: #F5F1E8;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .progress-bar {
+            position: sticky;
+            top: 0;
+            background: #F5F1E8;
+            padding: 15px 40px;
+            border-bottom: 2px solid #D5CDB8;
+            z-index: 100;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #D5CDB8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #1B7B7E;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #1B7B7E;
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question-label {
+            display: block;
+            font-weight: 600;
+            color: #1B7B7E;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            line-height: 1.4;
+        }
+
+        .radio-group {
+            margin-top: 20px;
+        }
+
+        .radio-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #0D5F62;
+            color: #FFFFFF;
+        }
+
+        .radio-item:hover {
+            background: #1B7B7E;
+            transform: translateX(5px);
+        }
+
+        .radio-item.selected {
+            background: #1B7B7E;
+            box-shadow: 0 4px 12px rgba(27, 123, 126, 0.4);
+        }
+
+        input[type="radio"] {
+            margin-right: 15px;
+            margin-top: 0;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .radio-item label {
+            cursor: pointer;
+            font-size: 1.05rem;
+            color: #FFFFFF;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .option-letter {
+            display: none;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #D5CDB8;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-previous {
+            background: #D5CDB8;
+            color: #1B7B7E;
+        }
+
+        .btn-previous:hover {
+            background: #C5BDA8;
+        }
+
+        .btn-next {
+            background: #E97451;
+            color: #FFFFFF;
+        }
+
+        .btn-next:hover {
+            background: #D96441;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(233, 116, 81, 0.4);
+        }
+
+        .btn-submit {
+            background: #E97451;
+            color: #FFFFFF;
+        }
+
+        .btn-submit:hover {
+            background: #D96441;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(233, 116, 81, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #1B7B7E;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .result-message {
+            display: none;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result-message.active {
+            display: block;
+        }
+
+        .result-message h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #1B7B7E;
+        }
+
+        .result-message p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #2D3748;
+        }
+
+        .result-message ul {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 500px;
+            list-style-position: inside;
+        }
+
+        .result-message li {
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+            color: #2D3748;
+        }
+
+        .result-cta {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 16px 40px;
+            background: #E97451;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .result-cta:hover {
+            background: #D96441;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(233, 116, 81, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-content {
+                padding: 25px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+
+            .question-label {
+                font-size: 1.1rem;
+            }
+
+            .radio-item label {
+                font-size: 0.95rem;
+            }
+        }
+
+        .page-indicator {
+            text-align: center;
+            color: #1B7B7E;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            opacity: 0.7;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #2D3748;
+        }
+
+        .intro-text strong {
+            color: #1B7B7E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Author Strategy Quiz</h1>
+            <p>Discover your ideal book strategy based on your business goals</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">Question 1 of 9</div>
+        </div>
+
+        <div class="form-content">
+            <form id="quizForm">
+                
+                <!-- WELCOME PAGE -->
+                <div class="page active" data-page="0">
+                    <div class="intro-text">
+                        <p><strong>Welcome!</strong> I'm going to help you discover your ideal book strategy through 9 questions about your business goals and priorities.</p>
+                        <p>This will take about <strong>3 minutes</strong>. Just select the option (A, B, C, or D) that best matches your situation.</p>
+                        <p>Your answers will determine whether your book strategy should focus on <strong>Authority Building</strong>, <strong>Client Acquisition</strong>, <strong>Business Expansion</strong>, or <strong>Legacy Creation</strong>.</p>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <div></div>
+                        <button type="button" class="btn btn-next" onclick="startQuiz()">Ready to Begin</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 1 -->
+                <div class="page" data-page="1">
+                    <div class="page-indicator">Question 1 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            What's your biggest business growth priority right now?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q1a" name="question1" value="A" required>
+                                <label for="q1a">Building industry recognition - I need to be seen as THE go-to expert in my field</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q1b" name="question1" value="B">
+                                <label for="q1b">Attracting more and better clients - I want prospects who already understand and value my expertise</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q1c" name="question1" value="C">
+                                <label for="q1c">Expanding my reach - I'm ready to grow into new markets or revenue streams beyond my current work</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q1d" name="question1" value="D">
+                                <label for="q1d">Creating lasting impact - I want my methodology to create change that continues beyond my direct involvement</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 2 -->
+                <div class="page" data-page="2">
+                    <div class="page-indicator">Question 2 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            What's the most frustrating obstacle in your business right now?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q2a" name="question2" value="A" required>
+                                <label for="q2a">Competing with less qualified people who somehow get more visibility and recognition than I do</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q2b" name="question2" value="B">
+                                <label for="q2b">Explaining my value - I spend too much time in sales conversations proving what I can do</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q2c" name="question2" value="C">
+                                <label for="q2c">Feeling limited by my current business model with few options for significant growth</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q2d" name="question2" value="D">
+                                <label for="q2d">Lack of systematization - My best ideas and methods exist mostly in my head, not documented anywhere</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 3 -->
+                <div class="page" data-page="3">
+                    <div class="page-indicator">Question 3 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            Two years from now, what would make you feel most successful?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q3a" name="question3" value="A" required>
+                                <label for="q3a">Industry leadership - Being invited to speak at major events and being quoted as an expert in media</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q3b" name="question3" value="B">
+                                <label for="q3b">Efficient client acquisition - Having a steady stream of ideal prospects who contact me already convinced they want to work with me</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q3c" name="question3" value="C">
+                                <label for="q3c">Significant expansion - Running a business that's substantially bigger and more diverse than what I have today</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q3d" name="question3" value="D">
+                                <label for="q3d">Meaningful legacy - Knowing my methodology is being used by others to create positive change in the world</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 4 -->
+                <div class="page" data-page="4">
+                    <div class="page-indicator">Question 4 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            How do people in your industry currently perceive you?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q4a" name="question4" value="A" required>
+                                <label for="q4a">Hidden expert - I have deep expertise but limited visibility beyond my immediate network</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q4b" name="question4" value="B">
+                                <label for="q4b">Well-kept secret - People know I deliver results, but I struggle to communicate what makes me different</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q4c" name="question4" value="C">
+                                <label for="q4c">Established specialist - I'm known for one thing, but I have expertise that could serve broader markets</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q4d" name="question4" value="D">
+                                <label for="q4d">Experienced practitioner - I've developed valuable methods, but they haven't spread beyond my direct influence</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 5 -->
+                <div class="page" data-page="5">
+                    <div class="page-indicator">Question 5 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            What kind of business growth excites you most?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q5a" name="question5" value="A" required>
+                                <label for="q5a">Thought leadership - Becoming the recognized authority that shapes how people think about my industry</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q5b" name="question5" value="B">
+                                <label for="q5b">Revenue optimization - Attracting higher-quality clients who pay premium rates with shorter sales cycles</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q5c" name="question5" value="C">
+                                <label for="q5c">Market expansion - Opening doors to opportunities and markets I don't currently have access to</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q5d" name="question5" value="D">
+                                <label for="q5d">Impact multiplication - Creating systems that allow my best work to help more people than I could reach personally</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 6 -->
+                <div class="page" data-page="6">
+                    <div class="page-indicator">Question 6 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            Which statement best describes your business situation?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q6a" name="question6" value="A" required>
+                                <label for="q6a">Expert seeking platform - I have valuable insights but need a bigger stage to share them with my industry</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q6b" name="question6" value="B">
+                                <label for="q6b">Service provider seeking efficiency - I deliver great results but need a better way to attract and convert ideal clients</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q6c" name="question6" value="C">
+                                <label for="q6c">Successful business seeking growth - I've built something solid and I'm ready to scale or diversify significantly</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q6d" name="question6" value="D">
+                                <label for="q6d">Experienced professional seeking legacy - I've spent years developing effective approaches that should outlast my career</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 7 -->
+                <div class="page" data-page="7">
+                    <div class="page-indicator">Question 7 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            What would make writing a book feel like the best business decision you ever made?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q7a" name="question7" value="A" required>
+                                <label for="q7a">Recognition and influence - Speaking opportunities, media attention, and being seen as a thought leader</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q7b" name="question7" value="B">
+                                <label for="q7b">Business efficiency - Prospects who understand my value before we ever talk, leading to faster, easier sales</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q7c" name="question7" value="C">
+                                <label for="q7c">New opportunities - Doors opening to partnerships, markets, and revenue streams I couldn't access before</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q7d" name="question7" value="D">
+                                <label for="q7d">Lasting contribution - Creating something that continues generating value and impact for years to come</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 8 -->
+                <div class="page" data-page="8">
+                    <div class="page-indicator">Question 8 of 9</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            When you think about your business goals, what drives you most?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q8a" name="question8" value="A" required>
+                                <label for="q8a">Establishing expertise - I want to be recognized now for the knowledge and insights I've already developed</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q8b" name="question8" value="B">
+                                <label for="q8b">Optimizing operations - I want to streamline how I attract and work with clients to maximize my time and revenue</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q8c" name="question8" value="C">
+                                <label for="q8c">Creating possibilities - I want to build something bigger than what I have now, with more options and opportunities</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q8d" name="question8" value="D">
+                                <label for="q8d">Building permanence - I want to create something meaningful that will matter long after I've moved on</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPage()">Next</button>
+                    </div>
+                </div>
+
+                <!-- QUESTION 9 -->
+                <div class="page" data-page="9">
+                    <div class="page-indicator">Question 9 of 9 - Final Question</div>
+                    
+                    <div class="question">
+                        <label class="question-label">
+                            If you had to choose just ONE business outcome to achieve in the next 18 months, which would have the biggest impact on your success?
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q9a" name="question9" value="A" required>
+                                <label for="q9a">Being recognized as THE authority in my field - Industry experts seek my opinion and quote my insights</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q9b" name="question9" value="B">
+                                <label for="q9b">Having a steady stream of pre-qualified prospects contacting me - Clients who already understand my value and are ready to invest</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q9c" name="question9" value="C">
+                                <label for="q9c">Successfully launching into 2-3 new markets or revenue streams - Diversifying beyond my current business model</label>
+                            </div>
+                            <div class="radio-item" onclick="selectOption(this)">
+                                <input type="radio" id="q9d" name="question9" value="D">
+                                <label for="q9d">Creating a methodology that others can learn and implement - Building something that scales beyond my personal involvement</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-previous" onclick="previousPage()">Previous</button>
+                        <button type="button" class="btn btn-submit" onclick="submitQuiz(event)">Get My Results</button>
+                    </div>
+
+                    <div class="loading" id="loading">
+                        <p>Calculating your results...</p>
+                    </div>
+                </div>
+
+                <!-- RESULTS PAGE -->
+                <div class="page" data-page="10">
+                    <div class="result-message active" id="resultMessage">
+                        <!-- Results will be inserted here by JavaScript -->
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const totalPages = 9;
+
+        function startQuiz() {
+            currentPage = 1;
+            document.querySelector('.page[data-page="0"]').classList.remove('active');
+            document.querySelector('.page[data-page="1"]').classList.add('active');
+            updateProgress();
+        }
+
+        function selectOption(element) {
+            // Remove selected class from all options in this question
+            const radioGroup = element.closest('.radio-group');
+            radioGroup.querySelectorAll('.radio-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Check the radio button
+            const radio = element.querySelector('input[type="radio"]');
+            radio.checked = true;
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                // Validate current page
+                const currentPageElement = document.querySelector(`.page[data-page="${currentPage}"]`);
+                const radioButtons = currentPageElement.querySelectorAll('input[type="radio"]');
+                const isChecked = Array.from(radioButtons).some(radio => radio.checked);
+                
+                if (!isChecked) {
+                    alert('Please select an answer before continuing.');
+                    return;
+                }
+                
+                // Hide current page
+                currentPageElement.classList.remove('active');
+                
+                // Show next page
+                currentPage++;
+                document.querySelector(`.page[data-page="${currentPage}"]`).classList.add('active');
+                
+                // Update progress
+                updateProgress();
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                // Hide current page
+                document.querySelector(`.page[data-page="${currentPage}"]`).classList.remove('active');
+                
+                // Show previous page
+                currentPage--;
+                document.querySelector(`.page[data-page="${currentPage}"]`).classList.add('active');
+                
+                // Update progress
+                updateProgress();
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateProgress() {
+            if (currentPage === 0) return; // Don't show progress on welcome page
+            
+            const progress = (currentPage / totalPages) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Question ${currentPage} of ${totalPages}`;
+        }
+
+        function submitQuiz(e) {
+            e.preventDefault();
+            
+            const form = document.getElementById('quizForm');
+            const submitBtn = e.target;
+            const loading = document.getElementById('loading');
+            
+            // Validate question 9 is answered
+            const q9 = form.querySelector('input[name="question9"]:checked');
+            if (!q9) {
+                alert('Please select an answer before continuing.');
+                return;
+            }
+            
+            // Disable submit button and show loading
+            submitBtn.disabled = true;
+            loading.classList.add('active');
+            
+            // Calculate results
+            const scores = { A: 0, B: 0, C: 0, D: 0 };
+            
+            // Count all answers
+            for (let i = 1; i <= 9; i++) {
+                const answer = form.querySelector(`input[name="question${i}"]:checked`);
+                if (answer) {
+                    scores[answer.value]++;
+                }
+            }
+            
+            // Determine winner
+            let result;
+            const maxScore = Math.max(scores.A, scores.B, scores.C, scores.D);
+            
+            // If there's a clear winner (5+ responses)
+            if (maxScore >= 5) {
+                result = Object.keys(scores).find(key => scores[key] === maxScore);
+            } else {
+                // Question 9 breaks the tie
+                const q9Answer = form.querySelector('input[name="question9"]:checked').value;
+                result = q9Answer;
+            }
+            
+            // Display results
+            setTimeout(() => {
+                loading.classList.remove('active');
+                showResults(result);
+            }, 1000);
+        }
+
+        function showResults(result) {
+            const resultMessage = document.getElementById('resultMessage');
+            
+            const results = {
+                'A': {
+                    title: 'Authority Building',
+                    description: 'Based on your responses, your biggest opportunity lies in establishing thought leadership and industry recognition.',
+                    strategy: [
+                        'Document your unique methodology and contrarian insights',
+                        'Position yourself as the recognized expert who shapes industry thinking',
+                        'Create content that establishes credibility and attracts speaking opportunities'
+                    ],
+                    url: 'LINK-A-PLACEHOLDER' // Replace with actual URL
+                },
+                'B': {
+                    title: 'Client Acquisition',
+                    description: 'Based on your responses, your biggest opportunity lies in systematically attracting and converting ideal clients.',
+                    strategy: [
+                        'Create a practical guide that demonstrates your expertise',
+                        'Develop content that pre-qualifies prospects and shortens sales cycles',
+                        'Build a system that brings you clients who already understand your value'
+                    ],
+                    url: 'LINK-B-PLACEHOLDER' // Replace with actual URL
+                },
+                'C': {
+                    title: 'Business Expansion',
+                    description: 'Based on your responses, your biggest opportunity lies in growth into new markets and revenue streams.',
+                    strategy: [
+                        'Develop a scalable framework for broader applications',
+                        'Create content that opens doors to new partnerships and opportunities',
+                        'Build systems that help you diversify beyond your current business model'
+                    ],
+                    url: 'LINK-C-PLACEHOLDER' // Replace with actual URL
+                },
+                'D': {
+                    title: 'Legacy Creation',
+                    description: 'Based on your responses, your biggest opportunity lies in creating long-term impact and knowledge transfer.',
+                    strategy: [
+                        'Provide comprehensive system documentation for others',
+                        'Create methodology that scales beyond your personal involvement',
+                        'Build something meaningful that continues generating value for years'
+                    ],
+                    url: 'LINK-D-PLACEHOLDER' // Replace with actual URL
+                }
+            };
+            
+            const selectedResult = results[result];
+            
+            resultMessage.innerHTML = `
+                <h2>🎯 Your Book Strategy: ${selectedResult.title}</h2>
+                <p>${selectedResult.description}</p>
+                <p><strong>Your book strategy should:</strong></p>
+                <ul>
+                    ${selectedResult.strategy.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+                <p>Your complete strategic roadmap is being sent to your email right now - check your inbox in the next 2 minutes!</p>
+                <a href="${selectedResult.url}" class="result-cta">View Your Complete ${selectedResult.title} Strategy</a>
+                <p style="margin-top: 20px; font-size: 0.95rem; color: #666;">
+                    This page includes:<br>
+                    ✅ Your detailed strategic roadmap<br>
+                    ✅ Specific implementation recommendations<br>
+                    ✅ Two ways to get started<br>
+                    ✅ Strategic next steps
+                </p>
+            `;
+            
+            // Hide current page and show results
+            document.querySelector('.page[data-page="9"]').classList.remove('active');
+            document.querySelector('.page[data-page="10"]').classList.add('active');
+            
+            // Hide progress bar
+            document.querySelector('.progress-bar').style.display = 'none';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
