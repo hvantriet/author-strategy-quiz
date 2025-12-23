@@ -322,6 +322,16 @@
         .intro-text strong {
             color: #1B7B7E;
         }
+
+        /* Hide header and progress bar on welcome page */
+        body.welcome-page .header,
+        body.welcome-page .progress-bar {
+            display: none;
+        }
+
+        body.welcome-page .form-content {
+            padding-top: 60px;
+        }
     </style>
 </head>
 <body>
@@ -343,21 +353,28 @@
                 
                 <!-- WELCOME PAGE -->
                 <div class="page active" data-page="0">
+                    <h1 style="font-size: 2.8rem; color: #1B7B7E; margin-bottom: 35px; line-height: 1.2; font-weight: 600; text-align: center;">Ready to Discover Your Ideal Book Strategy?</h1>
+                    
                     <div class="intro-text">
-                        <p><strong>Welcome!</strong> I'm going to help you discover your ideal book strategy through 9 questions about your business goals and priorities.</p>
-                        <p>This will take about <strong>3 minutes</strong>. Just select the option (A, B, C, or D) that best matches your situation.</p>
-                        <p>Your answers will determine whether your book strategy should focus on <strong>Authority Building</strong>, <strong>Client Acquisition</strong>, <strong>Business Expansion</strong>, or <strong>Legacy Creation</strong>.</p>
+                        <p style="margin-bottom: 20px;">Most successful entrepreneurs eventually realize they need a book to grow their business. But here's what they don't realize: the strategy behind your book matters more than the content.</p>
+                        
+                        <p style="margin-bottom: 20px;"><strong>The wrong approach</strong> wastes months of work and generates zero business impact. <strong>The right approach</strong> becomes your most powerful business development tool.</p>
+                        
+                        <p style="margin-bottom: 20px;">This assessment analyzes your business situation and reveals which of the 4 proven strategies will accelerate your growth most effectively.</p>
+                        
+                        <p style="margin-bottom: 20px;">It takes 3 minutes and could save you months of misdirected effort.</p>
+                        
+                        <p style="font-weight: 600; color: #1B7B7E;">Ready to get started?</p>
                     </div>
 
                     <div class="navigation-buttons">
                         <div></div>
-                        <button type="button" class="btn btn-next" onclick="startQuiz()">Ready to Begin</button>
+                        <button type="button" class="btn btn-next" onclick="startQuiz()">NEXT →</button>
                     </div>
                 </div>
 
                 <!-- QUESTION 1 -->
                 <div class="page" data-page="1">
-                    <div class="page-indicator">Question 1 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -391,7 +408,6 @@
 
                 <!-- QUESTION 2 -->
                 <div class="page" data-page="2">
-                    <div class="page-indicator">Question 2 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -425,7 +441,6 @@
 
                 <!-- QUESTION 3 -->
                 <div class="page" data-page="3">
-                    <div class="page-indicator">Question 3 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -459,7 +474,6 @@
 
                 <!-- QUESTION 4 -->
                 <div class="page" data-page="4">
-                    <div class="page-indicator">Question 4 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -493,7 +507,6 @@
 
                 <!-- QUESTION 5 -->
                 <div class="page" data-page="5">
-                    <div class="page-indicator">Question 5 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -527,7 +540,6 @@
 
                 <!-- QUESTION 6 -->
                 <div class="page" data-page="6">
-                    <div class="page-indicator">Question 6 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -561,7 +573,6 @@
 
                 <!-- QUESTION 7 -->
                 <div class="page" data-page="7">
-                    <div class="page-indicator">Question 7 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -595,7 +606,6 @@
 
                 <!-- QUESTION 8 -->
                 <div class="page" data-page="8">
-                    <div class="page-indicator">Question 8 of 9</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -629,7 +639,6 @@
 
                 <!-- QUESTION 9 -->
                 <div class="page" data-page="9">
-                    <div class="page-indicator">Question 9 of 9 - Final Question</div>
                     
                     <div class="question">
                         <label class="question-label">
@@ -680,8 +689,12 @@
         let currentPage = 0;
         const totalPages = 9;
 
+        // Add welcome-page class to body on load
+        document.body.classList.add('welcome-page');
+
         function startQuiz() {
             currentPage = 1;
+            document.body.classList.remove('welcome-page');
             document.querySelector('.page[data-page="0"]').classList.remove('active');
             document.querySelector('.page[data-page="1"]').classList.add('active');
             updateProgress();
@@ -742,6 +755,13 @@
                 updateProgress();
                 
                 // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (currentPage === 1) {
+                // Going back to welcome page
+                document.querySelector(`.page[data-page="${currentPage}"]`).classList.remove('active');
+                currentPage = 0;
+                document.querySelector('.page[data-page="0"]').classList.add('active');
+                document.body.classList.add('welcome-page');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
