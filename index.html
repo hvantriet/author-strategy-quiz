@@ -693,10 +693,10 @@
                     <p style="color: #E97451; font-size: 0.9rem; margin-bottom: 25px; display: none;" id="emailError">Email is required</p>
                     
                     <div style="background: #E97451; color: #FFFFFF; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; cursor: pointer;" onclick="toggleBenefits()">
-                        <strong>▲ What will I receive?</strong>
+                        <strong>▼ What will I receive?</strong>
                     </div>
                     
-                    <div id="benefitsList" style="margin-bottom: 30px;">
+                    <div id="benefitsList" style="margin-bottom: 30px; display: none;">
                         <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
                             <span style="color: #E97451; font-size: 1.3rem; margin-right: 12px;">✓</span>
                             <p style="color: #666; margin: 0;">Your personalized strategic roadmap</p>
@@ -717,7 +717,7 @@
                     
                     <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
                         <p style="color: #1B7B7E; font-size: 0.95rem; line-height: 1.6; margin: 0;"><strong>Your privacy matters.</strong> By entering your email, you'll receive your quiz results plus strategic insights about writing business-building books. I'll never share your email, and you can unsubscribe anytime.</p>
-                        <p style="color: #1B7B7E; font-size: 0.95rem; margin: 10px 0 0 0;">Read more in our <a href="https://bizbuildingbooks.com/privacy-policy" style="color: #1B7B7E; text-decoration: underline;">Privacy Policy</a>.</p>
+                        <p style="color: #1B7B7E; font-size: 0.95rem; margin: 10px 0 0 0;">Read more in our <a href="https://bizbuildingbooks.com/privacy" target="_blank" rel="noopener noreferrer" style="color: #1B7B7E; text-decoration: underline;">Privacy Policy</a>.</p>
                     </div>
 
                     <div class="navigation-buttons">
@@ -910,9 +910,9 @@
                 }
             }
             
-            // Send to webhook (replace with your actual webhook URL)
+            // Send to webhook
             try {
-                const webhookUrl = 'YOUR_WEBHOOK_URL_HERE'; // Replace with actual Make.com webhook
+                const webhookUrl = 'https://hook.us2.make.com/fpq6bw0fu1xjuu9y394syk7uw1kt8s48';
                 
                 await fetch(webhookUrl, {
                     method: 'POST',
