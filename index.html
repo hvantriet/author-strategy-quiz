@@ -929,9 +929,9 @@
             // Redirect to appropriate results page based on result
             const resultUrls = {
                 'A': `https://bizbuildingbooks.com/quiz-result-authority?email=${encodeURIComponent(email)}&quiz_direction=${encodeURIComponent('Authority Building')}&source=quiz`,
-                'B': 'https://bizbuildingbooks.com/quiz-result-client-acquisition',
-                'C': 'https://bizbuildingbooks.com/quiz-result-business-expansion',
-                'D': 'https://bizbuildingbooks.com/quiz-result-legacy'
+                'B': `https://bizbuildingbooks.com/quiz-result-client-acquisition?email=${encodeURIComponent(email)}&quiz_direction=${encodeURIComponent('Client Acquisition')}&source=quiz`,
+                'C': `https://bizbuildingbooks.com/quiz-result-business-expansion?email=${encodeURIComponent(email)}&quiz_direction=${encodeURIComponent('Business Expansion')}&source=quiz`,
+                'D': `https://bizbuildingbooks.com/quiz-result-legacy?email=${encodeURIComponent(email)}&quiz_direction=${encodeURIComponent('Legacy Building')}&source=quiz`
             };
             
             // Small delay to ensure webhook is sent
